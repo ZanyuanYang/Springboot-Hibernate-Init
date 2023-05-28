@@ -3,6 +3,7 @@ package com.example.springboothibernateinit.service;
 import com.example.springboothibernateinit.model.entity.User;
 import com.example.springboothibernateinit.model.vo.LoginUserVO;
 import com.example.springboothibernateinit.model.vo.UserVO;
+import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -115,5 +116,14 @@ public interface UserService {
 	 * @return
 	 */
 	List<UserVO> getUserVO(List<User> userList);
+
+	/**
+	 * get user list
+	 *
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	List<User> getUserListByPage(int page, int size);
 
 }

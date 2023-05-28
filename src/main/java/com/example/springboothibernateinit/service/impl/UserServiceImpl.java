@@ -13,10 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -207,4 +210,11 @@ public class UserServiceImpl implements UserService {
 		return userList.stream().map(this::getUserVO).collect(Collectors.toList());
 	}
 
+	//https://www.baeldung.com/spring-data-jpa-pagination-sorting
+	@Override
+	public List<User> getUserListByPage(int page, int size) {
+		Pageable pageable = PageRequest.of(page - 1, size);
+		Page<User> userPage = userDao.findAll(pageable);
+		return userPage.getContent();
+	}
 }

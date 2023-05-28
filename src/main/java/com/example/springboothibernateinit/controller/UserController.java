@@ -10,17 +10,21 @@ import com.example.springboothibernateinit.exception.BusinessException;
 import com.example.springboothibernateinit.exception.ThrowUtils;
 import com.example.springboothibernateinit.model.dto.user.UserAddRequest;
 import com.example.springboothibernateinit.model.dto.user.UserLoginRequest;
+import com.example.springboothibernateinit.model.dto.user.UserQueryRequest;
 import com.example.springboothibernateinit.model.dto.user.UserRegisterRequest;
 import com.example.springboothibernateinit.model.entity.User;
 import com.example.springboothibernateinit.model.vo.LoginUserVO;
+import com.example.springboothibernateinit.model.vo.UserVO;
 import com.example.springboothibernateinit.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -132,10 +136,6 @@ public class UserController {
 		if (deleteRequest == null || deleteRequest.getId() <= 0) {
 			throw new BusinessException(ErrorCode.PARAMS_ERROR);
 		}
-		boolean isAdmin = userService.isAdmin(request);
-		if(!isAdmin){
-			throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-		}
 		boolean b = userService.removeById(deleteRequest.getId());
 		return ResultUtils.success(b);
 	}
@@ -158,5 +158,28 @@ public class UserController {
 		return ResultUtils.success(user);
 	}
 
+	/**
+	 * 根据 id 获取包装类
+	 *
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@GetMapping("/get/vo")
+	public BaseResponse<UserVO> getUserVOById(long id, HttpServletRequest request) {
+		BaseResponse<User> response = getUserById(id, request);
+		User user = response.getData();
+		return ResultUtils.success(userService.getUserVO(user));
+	}
+
+	// get user list by page
+	@PostMapping("/list/page")
+	@AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+	public BaseResponse<List<User>> getUserListByPage(@RequestBody UserQueryRequest userQueryRequest, HttpServletRequest request) {
+		int current = (int) userQueryRequest.getCurrent();
+		int size = (int) userQueryRequest.getPageSize();
+		List<User> userList = userService.getUserListByPage(current, size);
+		return ResultUtils.success(userList);
+	}
 
 }
