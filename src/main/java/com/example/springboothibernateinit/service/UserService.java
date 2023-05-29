@@ -1,14 +1,16 @@
 package com.example.springboothibernateinit.service;
 
+import com.example.springboothibernateinit.dao.UserDao;
 import com.example.springboothibernateinit.model.entity.User;
 import com.example.springboothibernateinit.model.vo.LoginUserVO;
 import com.example.springboothibernateinit.model.vo.UserVO;
-import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-public interface UserService {
+public interface UserService{
+
 
 	/**
 	 * User Register

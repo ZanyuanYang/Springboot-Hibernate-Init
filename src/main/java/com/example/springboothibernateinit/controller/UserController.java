@@ -19,7 +19,6 @@ import com.example.springboothibernateinit.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -172,7 +171,12 @@ public class UserController {
 		return ResultUtils.success(userService.getUserVO(user));
 	}
 
-	// get user list by page
+	/**
+	 * get user list by page
+	 * @param userQueryRequest
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/list/page")
 	@AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
 	public BaseResponse<List<User>> getUserListByPage(@RequestBody UserQueryRequest userQueryRequest, HttpServletRequest request) {
